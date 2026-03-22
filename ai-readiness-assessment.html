@@ -537,10 +537,10 @@ function updateBudgetLabel(val){const labels=T[currentLang].budget_labels||T['en
 function handleChange(){state.q1=document.getElementById('q1').value;state.q3=document.getElementById('q3').value;const n=(document.getElementById('lead-name')||{}).value||'';const e=(document.getElementById('lead-email')||{}).value||'';const c=(document.getElementById('lead-company')||{}).value||'';const btn=document.getElementById('btn-get-results');if(btn)btn.disabled=!(n.trim().length>1&&/\S+@\S+\.\S+/.test(e)&&c.trim().length>1);}
 
 let currentSection=1;
-function showSection(n){document.querySelectorAll('.form-section,.lead-section,.results-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('section-'+n);if(t)t.classList.add('active');currentSection=n;updateProgress(n);window.scrollTo({top:0,behavior:'smooth'});}
+function showSection(n){document.querySelectorAll('.form-section,.lead-section,.results-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('section-'+n);if(t)t.classList.add('active');currentSection=n;updateProgress(n);window.scrollTo({top:0,behavior:'smooth'});if(window.parent!==window){window.parent.postMessage({type:'scrollTop'},'*');}}
 function nextSection(n){showSection(n);}
 function prevSection(n){showSection(n);}
-function showLeadCapture(){document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));document.getElementById('lead-section').classList.add('active');updateProgress(5);window.scrollTo({top:0,behavior:'smooth'});}
+function showLeadCapture(){document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));document.getElementById('lead-section').classList.add('active');updateProgress(5);window.scrollTo({top:0,behavior:'smooth'});if(window.parent!==window){window.parent.postMessage({type:'scrollTop'},'*');}}
 function backFromLead(){document.getElementById('lead-section').classList.remove('active');showSection(4);}
 function updateProgress(step){const p={1:6,2:30,3:55,4:80,5:95};document.getElementById('progressFill').style.width=(p[step]||2)+'%';for(let i=1;i<=4;i++){const el=document.getElementById('pstep-'+i);el.classList.remove('active','completed');if(i<step)el.classList.add('completed');else if(i===step)el.classList.add('active');}}
 
@@ -578,7 +578,7 @@ function calculateAndShowResults(){
   h+='<div class="radar-container"><h3>'+t('res_profile')+'</h3><div class="radar-canvas-wrap"><canvas id="radarChart" width="360" height="360"></canvas></div></div>';
   h+='<div class="dimensions-grid">'+dims.map(d=>'<div class="dim-card"><div class="dim-header"><span class="dim-label">'+d.label+'</span><span class="dim-score" style="color:'+d.color+'">'+sc[d.key]+'/25</span></div><div class="dim-bar"><div class="dim-bar-fill" style="width:'+(sc[d.key]/25*100)+'%;background:'+d.color+'"></div></div><div class="dim-detail">'+dd(d.key,sc[d.key])+'</div></div>').join('')+'</div>';
   h+='<div class="recs-section"><h3>'+t('res_recs')+'</h3>'+recs.map(r=>'<div class="rec-card"><div class="rec-icon" style="background:'+r.color+'22;font-size:22px">'+r.icon+'</div><div><h4>'+r.title+'</h4><p>'+r.text+'</p></div></div>').join('')+'</div>';
-  h+='<div class="cta-section"><h3>'+t('res_cta_title')+'</h3><p>'+t('res_cta_sub')+'</p><a href="https://calendar.app.google/gARU96EmoueEsaTv6" target="_blank" rel="noopener" class="btn btn-cta" style="text-decoration:none">'+t('res_cta_btn')+' <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>';
+  h+='<div class="cta-section"><h3>'+t('res_cta_title')+'</h3><p>'+t('res_cta_sub')+'</p><a href="#" onclick="window.top.open('https://calendar.app.google/gARU96EmoueEsaTv6','_blank');return false;" class="btn btn-cta" style="text-decoration:none;cursor:pointer">'+t('res_cta_btn')+' <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>';
   document.querySelectorAll('.form-section,.lead-section').forEach(s=>s.classList.remove('active'));
   document.getElementById('progressBarContainer').style.display='none';
   const re=document.getElementById('results-section');re.innerHTML=h;re.classList.add('active');
@@ -586,7 +586,7 @@ function calculateAndShowResults(){
   const co=document.getElementById('lead-company').value.trim();
   const dl=currentLang==='nl'?'nl-BE':currentLang==='fr'?'fr-BE':'en-GB';
   document.querySelector('.assessment-header p').textContent=t('res_prepared_for')+' '+co+' \u2014 '+new Date().toLocaleDateString(dl,{day:'numeric',month:'long',year:'numeric'});
-  window.scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo({top:0,behavior:'smooth'});if(window.parent!==window){window.parent.postMessage({type:'scrollTop'},'*');}
   setTimeout(()=>drawRadar(sc),100);
   sendLeadData(sc,lb);
 }
@@ -612,7 +612,8 @@ function drawRadar(sc){
 function sendLeadData(sc,lb){
   const payload={name:document.getElementById('lead-name').value.trim(),email:document.getElementById('lead-email').value.trim(),company:document.getElementById('lead-company').value.trim(),role:document.getElementById('lead-role').value,language:currentLang,score_total:sc.total,score_strategic:sc.strategic,score_technical:sc.technical,score_organisational:sc.organisational,score_implementation:sc.implementation,score_label:lb.label,industry:state.q1,company_size:state.q2,revenue:state.q3,analytics_level:state.q4,cloud_adoption:state.q5,data_governance:state.q6,team_capabilities:state.q7.join(','),ai_experience:state.q8,data_infrastructure:state.q9,budget:state.q10,timeline:state.q11,objectives:state.q12.join(','),top_concern:state.q13,regulations:state.q14.join(','),decision_process:state.q15,timestamp:new Date().toISOString()};
   console.log('Lead Data:',JSON.stringify(payload,null,2));
- 
+
+  
   fetch('https://script.google.com/macros/s/AKfycbz_v7QSqXh34x_J7D5M87lqhkY3N1HLl0mNRmsHtxIMcL9Go5qwRN_skJne665afMFNGQ/exec', {
      method: 'POST',
      mode: 'no-cors',
@@ -621,7 +622,7 @@ function sendLeadData(sc,lb){
    }).catch(err => console.log('Sheet error:', err));
 }
 
-document.addEventListener('DOMContentLoaded',()=>{updateBudgetLabel(2);});
+document.addEventListener("DOMContentLoaded",()=>{updateBudgetLabel(2);function notifyHeight(){if(window.parent!==window){window.parent.postMessage({type:"resize",height:document.body.scrollHeight+40},"*");}}notifyHeight();new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});window.addEventListener("resize",notifyHeight);setInterval(notifyHeight,500);});
 </script>
 </body>
 </html>

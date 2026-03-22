@@ -613,13 +613,27 @@ function sendLeadData(sc,lb){
   const payload={name:document.getElementById('lead-name').value.trim(),email:document.getElementById('lead-email').value.trim(),company:document.getElementById('lead-company').value.trim(),role:document.getElementById('lead-role').value,language:currentLang,score_total:sc.total,score_strategic:sc.strategic,score_technical:sc.technical,score_organisational:sc.organisational,score_implementation:sc.implementation,score_label:lb.label,industry:state.q1,company_size:state.q2,revenue:state.q3,analytics_level:state.q4,cloud_adoption:state.q5,data_governance:state.q6,team_capabilities:state.q7.join(','),ai_experience:state.q8,data_infrastructure:state.q9,budget:state.q10,timeline:state.q11,objectives:state.q12.join(','),top_concern:state.q13,regulations:state.q14.join(','),decision_process:state.q15,timestamp:new Date().toISOString()};
   console.log('Lead Data:',JSON.stringify(payload,null,2));
 
-  
+  // GOOGLE SHEETS SETUP:
+  // 1. Create a Google Sheet with these column headers in row 1:
+  //    name | email | company | role | language | score_total | score_strategic | score_technical | score_organisational | score_implementation | score_label | industry | company_size | revenue | analytics_level | cloud_adoption | data_governance | team_capabilities | ai_experience | data_infrastructure | budget | timeline | objectives | top_concern | regulations | decision_process | timestamp
+  // 2. Go to Extensions > Apps Script and paste:
+  //    function doPost(e) {
+  //      var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  //      var data = JSON.parse(e.postData.contents);
+  //      var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  //      var row = headers.map(function(h) { return data[h] || ''; });
+  //      sheet.appendRow(row);
+  //      return ContentService.createTextOutput(JSON.stringify({status:'ok'})).setMimeType(ContentService.MimeType.JSON);
+  //    }
+  // 3. Deploy > New deployment > Web app > Execute as: Me > Who has access: Anyone
+  // 4. Replace YOUR_SCRIPT_URL below with the deployment URL and uncomment:
+  //
   fetch('https://script.google.com/macros/s/AKfycbz_v7QSqXh34x_J7D5M87lqhkY3N1HLl0mNRmsHtxIMcL9Go5qwRN_skJne665afMFNGQ/exec', {
-     method: 'POST',
-     mode: 'no-cors',
-     headers: {'Content-Type': 'application/json'},
-     body: JSON.stringify(payload)
-   }).catch(err => console.log('Sheet error:', err));
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload)
+  }).catch(err => console.log('Sheet error:', err));
 }
 
 document.addEventListener("DOMContentLoaded",()=>{updateBudgetLabel(2);function notifyHeight(){if(window.parent!==window){window.parent.postMessage({type:"resize",height:document.body.scrollHeight+40},"*");}}notifyHeight();new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});window.addEventListener("resize",notifyHeight);setInterval(notifyHeight,500);});

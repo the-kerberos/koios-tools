@@ -632,7 +632,7 @@ function sendLeadData(sc,lb){
   fetch('https://script.google.com/macros/s/AKfycbz_v7QSqXh34x_J7D5M87lqhkY3N1HLl0mNRmsHtxIMcL9Go5qwRN_skJne665afMFNGQ/exec', {
     method: 'POST',
     mode: 'no-cors',
-    headers: {'Content-Type': 'application/json'},
+    headers: {'Content-Type': 'text/plain'},
     body: JSON.stringify(payload)
   }).catch(err => console.log('Sheet error:', err));
 }

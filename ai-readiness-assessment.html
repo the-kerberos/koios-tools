@@ -579,11 +579,10 @@ function calculateAndShowResults(){
   h+='<div class="radar-container"><h3>'+t('res_profile')+'</h3><div class="radar-canvas-wrap"><canvas id="radarChart" width="360" height="360"></canvas></div></div>';
   h+='<div class="dimensions-grid">'+dims.map(d=>'<div class="dim-card"><div class="dim-header"><span class="dim-label">'+d.label+'</span><span class="dim-score" style="color:'+d.color+'">'+sc[d.key]+'/25</span></div><div class="dim-bar"><div class="dim-bar-fill" style="width:'+(sc[d.key]/25*100)+'%;background:'+d.color+'"></div></div><div class="dim-detail">'+dd(d.key,sc[d.key])+'</div></div>').join('')+'</div>';
   h+='<div class="recs-section"><h3>'+t('res_recs')+'</h3>'+recs.map(r=>'<div class="rec-card"><div class="rec-icon" style="background:'+r.color+'22;font-size:22px">'+r.icon+'</div><div><h4>'+r.title+'</h4><p>'+r.text+'</p></div></div>').join('')+'</div>';
-  h+='<div class="cta-section"><h3>'+t('res_cta_title')+'</h3><p>'+t('res_cta_sub')+'</p><a href="#" id="cta-calendar-link" class="btn btn-cta" style="text-decoration:none;cursor:pointer">'+t('res_cta_btn')+' <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>';
+  h+='<div class="cta-section"><h3>'+t('res_cta_title')+'</h3><p>'+t('res_cta_sub')+'</p><a href="https://calendar.app.google/gARU96EmoueEsaTv6" target="_blank" rel="noopener noreferrer" class="btn btn-cta" style="text-decoration:none;cursor:pointer">'+t('res_cta_btn')+' <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>';
   document.querySelectorAll('.form-section,.lead-section').forEach(s=>s.classList.remove('active'));
   document.getElementById('progressBarContainer').style.display='none';
   const re=document.getElementById('results-section');re.innerHTML=h;re.classList.add('active');
-  document.getElementById('cta-calendar-link').addEventListener('click',function(e){e.preventDefault();if(window.parent!==window){window.parent.postMessage({type:'openUrl',url:'https://the-kerberos.github.io/koios-tools/book.html'},'*');}else{window.open('https://the-kerberos.github.io/koios-tools/book.html','_blank');}});
   document.querySelector('.assessment-header h1').innerHTML=t('res_headline_html');
   const co=document.getElementById('lead-company').value.trim();
   const dl=currentLang==='nl'?'nl-BE':currentLang==='fr'?'fr-BE':'en-GB';

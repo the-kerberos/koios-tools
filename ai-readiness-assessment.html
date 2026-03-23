@@ -35,13 +35,99 @@
     color: var(--text-primary);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    overflow: hidden;
+    min-height: 100vh;
   }
-  html { overflow: hidden; }
   .assessment-container {
     max-width: 720px;
     margin: 0 auto;
     padding: 24px 20px 60px;
+  }
+  /* --- Site Header --- */
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-secondary);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .site-header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .site-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-primary);
+  }
+  .site-logo img {
+    height: 36px;
+    width: auto;
+  }
+  .site-logo-text {
+    font-family: 'Adamina', serif;
+    font-size: 16px;
+    color: var(--text-primary);
+  }
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .site-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color var(--transition);
+  }
+  .site-nav a:hover { color: var(--text-primary); }
+  .site-nav a.nav-cta {
+    background: var(--accent);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    transition: all var(--transition);
+  }
+  .site-nav a.nav-cta:hover { background: var(--accent-light); }
+  @media (max-width: 520px) {
+    .site-nav { gap: 12px; }
+    .site-nav a.nav-link { display: none; }
+  }
+  /* --- Site Footer --- */
+  .site-footer {
+    text-align: center;
+    padding: 32px 24px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .site-footer p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .site-footer a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 12px;
+    transition: color var(--transition);
+  }
+  .site-footer a:hover { color: var(--accent-bright); }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
   }
   .lang-switcher { display: flex; justify-content: flex-end; gap: 4px; margin-bottom: 12px; }
   .lang-btn {
@@ -248,6 +334,22 @@
 </style>
 </head>
 <body>
+
+<!-- Site Header -->
+<div class="site-header">
+  <div class="site-header-inner">
+    <a href="https://koios-analytics.com/" class="site-logo">
+      <img src="https://img1.wsimg.com/isteam/ip/48351d78-2301-42de-83a8-8139f9954e86/brandmark-design-white%20transparent.png/:/rs=h:97,cg:true,m/qt=q:95" alt="Koios Analytics">
+    </a>
+    <nav class="site-nav">
+      <a href="https://koios-analytics.com/" class="nav-link">Home</a>
+      <a href="https://koios-analytics.com/resources" class="nav-link">Resources</a>
+      <a href="https://koios-analytics.com/contact-us" class="nav-link">Contact</a>
+      <a href="https://calendar.app.google/gARU96EmoueEsaTv6" class="nav-cta">Schedule Call</a>
+    </nav>
+  </div>
+</div>
+
 <div class="assessment-container">
   <div class="lang-switcher">
     <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -498,8 +600,19 @@
     </div>
   </div>
 
-  <!-- RESULTS -->
+  <!-- Results -->
   <div class="results-section" id="results-section"></div>
+</div>
+
+<!-- Site Footer -->
+<div class="site-footer">
+  <p>Koios Analytics (Pty) Ltd &mdash; solutions@koios-analytics.com</p>
+  <div class="footer-links">
+    <a href="https://koios-analytics.com/">Home</a>
+    <a href="https://koios-analytics.com/resources">Resources</a>
+    <a href="https://koios-analytics.com/about-us">About Us</a>
+    <a href="https://koios-analytics.com/contact-us">Contact</a>
+  </div>
 </div>
 
 <script>
@@ -538,10 +651,10 @@ function updateBudgetLabel(val){const labels=T[currentLang].budget_labels||T['en
 function handleChange(){state.q1=document.getElementById('q1').value;state.q3=document.getElementById('q3').value;const n=(document.getElementById('lead-name')||{}).value||'';const e=(document.getElementById('lead-email')||{}).value||'';const c=(document.getElementById('lead-company')||{}).value||'';const btn=document.getElementById('btn-get-results');if(btn)btn.disabled=!(n.trim().length>1&&/\S+@\S+\.\S+/.test(e)&&c.trim().length>1);}
 
 let currentSection=1;
-function showSection(n){document.querySelectorAll('.form-section,.lead-section,.results-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('section-'+n);if(t)t.classList.add('active');currentSection=n;updateProgress(n);document.documentElement.scrollTop=0;document.body.scrollTop=0;if(window.parent!==window){window.parent.postMessage({type:'scrollTop'},'*');}}
+function showSection(n){document.querySelectorAll('.form-section,.lead-section,.results-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('section-'+n);if(t)t.classList.add('active');currentSection=n;updateProgress(n);window.scrollTo({top:0,behavior:'smooth'});}
 function nextSection(n){showSection(n);}
 function prevSection(n){showSection(n);}
-function showLeadCapture(){document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));document.getElementById('lead-section').classList.add('active');updateProgress(5);document.documentElement.scrollTop=0;document.body.scrollTop=0;if(window.parent!==window){window.parent.postMessage({type:'scrollTop'},'*');}}
+function showLeadCapture(){document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));document.getElementById('lead-section').classList.add('active');updateProgress(5);window.scrollTo({top:0,behavior:'smooth'});}
 function backFromLead(){document.getElementById('lead-section').classList.remove('active');showSection(4);}
 function updateProgress(step){const p={1:6,2:30,3:55,4:80,5:95};document.getElementById('progressFill').style.width=(p[step]||2)+'%';for(let i=1;i<=4;i++){const el=document.getElementById('pstep-'+i);el.classList.remove('active','completed');if(i<step)el.classList.add('completed');else if(i===step)el.classList.add('active');}}
 
@@ -579,7 +692,7 @@ function calculateAndShowResults(){
   h+='<div class="radar-container"><h3>'+t('res_profile')+'</h3><div class="radar-canvas-wrap"><canvas id="radarChart" width="360" height="360"></canvas></div></div>';
   h+='<div class="dimensions-grid">'+dims.map(d=>'<div class="dim-card"><div class="dim-header"><span class="dim-label">'+d.label+'</span><span class="dim-score" style="color:'+d.color+'">'+sc[d.key]+'/25</span></div><div class="dim-bar"><div class="dim-bar-fill" style="width:'+(sc[d.key]/25*100)+'%;background:'+d.color+'"></div></div><div class="dim-detail">'+dd(d.key,sc[d.key])+'</div></div>').join('')+'</div>';
   h+='<div class="recs-section"><h3>'+t('res_recs')+'</h3>'+recs.map(r=>'<div class="rec-card"><div class="rec-icon" style="background:'+r.color+'22;font-size:22px">'+r.icon+'</div><div><h4>'+r.title+'</h4><p>'+r.text+'</p></div></div>').join('')+'</div>';
-  h+='<div class="cta-section"><h3>'+t('res_cta_title')+'</h3><p>'+t('res_cta_sub')+'</p><a href="https://the-kerberos.github.io/koios-tools/book.html" target="_blank" rel="noopener noreferrer" class="btn btn-cta" style="text-decoration:none;cursor:pointer">'+t('res_cta_btn')+' <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>';
+  h+='<div class="cta-section"><h3>'+t('res_cta_title')+'</h3><p>'+t('res_cta_sub')+'</p><a href="https://calendar.app.google/gARU96EmoueEsaTv6" target="_blank" rel="noopener noreferrer" class="btn btn-cta" style="text-decoration:none;cursor:pointer">'+t('res_cta_btn')+' <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>';
   document.querySelectorAll('.form-section,.lead-section').forEach(s=>s.classList.remove('active'));
   document.getElementById('progressBarContainer').style.display='none';
   const re=document.getElementById('results-section');re.innerHTML=h;re.classList.add('active');
@@ -587,7 +700,7 @@ function calculateAndShowResults(){
   const co=document.getElementById('lead-company').value.trim();
   const dl=currentLang==='nl'?'nl-BE':currentLang==='fr'?'fr-BE':'en-GB';
   document.querySelector('.assessment-header p').textContent=t('res_prepared_for')+' '+co+' \u2014 '+new Date().toLocaleDateString(dl,{day:'numeric',month:'long',year:'numeric'});
-  document.documentElement.scrollTop=0;document.body.scrollTop=0;if(window.parent!==window){window.parent.postMessage({type:'scrollTop'},'*');}
+  window.scrollTo({top:0,behavior:'smooth'});
   setTimeout(()=>drawRadar(sc),100);
   sendLeadData(sc,lb);
 }
@@ -637,7 +750,7 @@ function sendLeadData(sc,lb){
   }).then(()=>console.log('Sheet: sent')).catch(err => console.log('Sheet error:', err));
 }
 
-document.addEventListener("DOMContentLoaded",()=>{updateBudgetLabel(2);function notifyHeight(){if(window.parent!==window){window.parent.postMessage({type:"resize",height:document.body.scrollHeight+40},"*");}}notifyHeight();new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});window.addEventListener("resize",notifyHeight);setInterval(notifyHeight,500);});
+document.addEventListener("DOMContentLoaded",()=>{updateBudgetLabel(2);});
 </script>
 </body>
 </html>
